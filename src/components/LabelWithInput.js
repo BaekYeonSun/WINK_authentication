@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 export function LabelWithInput({label, ...rest}){
     return <Wrap>
-        <Label>{label}</Label>
+        <Label>{label} :</Label>
         <Input {...rest}/>
     </Wrap>;
 }

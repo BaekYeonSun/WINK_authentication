@@ -16,7 +16,7 @@ export function Join(props){
             ...input,
             [key]: data,
         })
-    }
+    };
     const join = async () => {
         const { history } = props;
         const token = await api.createUser(input.username, input.email, input.password, input.last_name, input.first_name);

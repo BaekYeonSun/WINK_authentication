@@ -30,3 +30,17 @@ export async function createUser(username, email, password, last_name, first_nam
     });
     return await response.json();
 }
+
+// export function readUser(){
+//     // let state = {username:'', email:'', last_name:'', first_name:''};
+//     let state;
+//     fetch(serverUri + '/user/', {
+//         method: 'get',
+//     })
+//     .then(response => response.json())
+//     .then(data =>
+//         console.log(data.username, data.email, data.last_name, data.first_name),
+//         // state = (data.username, data.email, data.last_name, data.first_name)
+//     );
+//     return state;
+// }

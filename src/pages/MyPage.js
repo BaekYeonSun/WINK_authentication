@@ -1,19 +1,44 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 export function MyPage(props){
     const token = localStorage.getItem('token');
     const username = localStorage.getItem('username');
     const password = localStorage.getItem('password');
-    console.log(token);
+    // console.log(token);
+
+    const [state, setState] = useState({
+        username:'', email:'', last_name:'', first_name:''
+    })
+
+    async function readUser(){
+        const id = 1;
+        await fetch('http://ec2-52-78-131-251.ap-northeast-2.compute.amazonaws.com/user/' + id, {
+            method: 'get',
+        })
+        .then(response => response.json())
+        .then(data =>
+            // console.log(data.username, data.email, data.last_name, data.first_name),
+            setState({
+                username: data.username,
+                email: data.email,
+                last_name: data.last_name,
+                first_name: data.first_name
+            })
+        )
+        .catch(function (error) {
+            console.log('Fetch Error : -S', error)
+        });
+    }
+
     return <>
-        <Wrap>
+        <Wrap readFunc = {readUser()}>
             <h2>MyPage</h2>
-            <Content>username: <Info>{username}</Info></Content>
-            <Content>password: <Info>{password}</Info></Content>
-            {/*<p>email:  <b>{props.email}</b></p>*/}
-            {/*<p>last_name:  <b>{props.last_name}</b></p>*/}
-            {/*<p>first_name:  <b>{props.first_name}</b></p>*/}
+            <Content>username: <Info>{state.username}</Info></Content>
+            {/*<Content>password: <Info>{state.password}</Info></Content>*/}
+            <Content>email: <Info>{state.email}</Info></Content>
+            <Content>last_name: <Info>{state.last_name}</Info></Content>
+            <Content>first_name: <Info>{state.first_name}</Info></Content>
         </Wrap>
     </>
 }
