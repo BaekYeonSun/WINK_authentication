@@ -91,3 +91,12 @@ export async function updateUser(username, password, email, last_name, first_nam
     })
     .catch(err => console.log("PUT error: ", err));
 }
+
+export async function deleteUser(){
+    let id = localStorage.getItem('id');
+    const response = await fetch(serverUri+'/user/'+id, {
+        method: 'delete'
+    })
+    .catch(err => console.log("DELETE error: ", err));
+    return response;
+}

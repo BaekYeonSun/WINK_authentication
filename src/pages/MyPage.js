@@ -39,6 +39,12 @@ export function MyPage(props){
         api.updateUser(inputs.username, inputs.password, inputs.email, inputs.last_name, inputs.first_name);
     }
 
+    const handleDelete = e => {
+        const { history } = props;
+        api.deleteUser();
+        history.push('/');
+    }
+
     return <>
         <Wrap>
             <h2>MyPage</h2>
@@ -47,7 +53,8 @@ export function MyPage(props){
             <Content>email: <Info name="email" type={"email"} value={inputs.email} onChange={getValue}/></Content>
             <Content>last_name: <Info name="last_name" type={"text"} value={inputs.last_name} onChange={getValue}/></Content>
             <Content>first_name: <Info name="first_name" type={"text"} value={inputs.first_name} onChange={getValue}/></Content>
-            <Button id={"update"} onClick={handleUpdate}>UPDATE</Button>
+            <Button1 id={"update"} onClick={handleUpdate}>UPDATE</Button1>
+            <Button2 id={"delete"} onClick={handleDelete}>DELETE</Button2>
         </Wrap>
     </>
 }
@@ -61,9 +68,15 @@ const Content = styled.p`
 const Info = styled.input`
   margin: 5px 15px 5px 15px;
 `;
-const Button = styled.button`
+const Button1 = styled.button`
   padding: 5px 15px 5px 15px;
   position: absolute;
   top: 30%;
-  left: 50%;
+  left: 43%;
+`;
+const Button2 = styled.button`
+  padding: 5px 15px 5px 15px;
+  position: absolute;
+  top: 30%;
+  left: 58%;
 `;

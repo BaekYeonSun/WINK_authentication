@@ -23,7 +23,7 @@ export function Join(props){
         if(token.non_field_errors){
             token.non_field_errors.map((e) => alert(e))
         } else{
-            console.log(token);
+            // console.log(token);
             history.push('/');
         }
     };
