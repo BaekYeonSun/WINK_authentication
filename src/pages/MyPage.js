@@ -1,44 +1,53 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import * as api from '../api/server';
 import styled from 'styled-components';
 
 export function MyPage(props){
-    const token = localStorage.getItem('token');
-    const username = localStorage.getItem('username');
-    const password = localStorage.getItem('password');
+    // const token = localStorage.getItem('token');
+    // const username = localStorage.getItem('username');
+    // const password = localStorage.getItem('password');
     // console.log(token);
 
-    const [state, setState] = useState({
-        username:'', email:'', last_name:'', first_name:''
-    })
+    const [inputs, setInputs] = useState({
+        username:'', password: '', email:'', last_name:'', first_name:''
+    });
 
-    async function readUser(){
-        const id = 1;
-        await fetch('http://ec2-52-78-131-251.ap-northeast-2.compute.amazonaws.com/user/' + id, {
-            method: 'get',
-        })
-        .then(response => response.json())
-        .then(data =>
-            // console.log(data.username, data.email, data.last_name, data.first_name),
-            setState({
+    const getUserInfo = async () => {
+        api.readUserInfo().then(function (data){
+            setInputs({
                 username: data.username,
+                password: localStorage.getItem('password'),
                 email: data.email,
                 last_name: data.last_name,
                 first_name: data.first_name
             })
-        )
-        .catch(function (error) {
-            console.log('Fetch Error : -S', error)
         });
+    };
+    useEffect(() =>{
+        getUserInfo();
+    }, []);
+
+    const getValue = e => {
+        const {name, value} = e.target;
+        setInputs({
+            ...inputs,
+            [name]: value,
+        });
+    };
+
+    const handleUpdate = e => {
+        api.updateUser(inputs.username, inputs.password, inputs.email, inputs.last_name, inputs.first_name);
     }
 
     return <>
-        <Wrap readFunc = {readUser()}>
+        <Wrap>
             <h2>MyPage</h2>
-            <Content>username: <Info>{state.username}</Info></Content>
-            {/*<Content>password: <Info>{state.password}</Info></Content>*/}
-            <Content>email: <Info>{state.email}</Info></Content>
-            <Content>last_name: <Info>{state.last_name}</Info></Content>
-            <Content>first_name: <Info>{state.first_name}</Info></Content>
+            <Content>username: <Info name="username" type={"text"} value={inputs.username} onChange={getValue}/></Content>
+            <Content>password: <Info name="password" type={"text"} value={inputs.password} onChange={getValue}/></Content>
+            <Content>email: <Info name="email" type={"email"} value={inputs.email} onChange={getValue}/></Content>
+            <Content>last_name: <Info name="last_name" type={"text"} value={inputs.last_name} onChange={getValue}/></Content>
+            <Content>first_name: <Info name="first_name" type={"text"} value={inputs.first_name} onChange={getValue}/></Content>
+            <Button id={"update"} onClick={handleUpdate}>UPDATE</Button>
         </Wrap>
     </>
 }
@@ -49,6 +58,12 @@ const Wrap = styled.div`
 const Content = styled.p`
   margin: 5px;
 `;
-const Info = styled.b`
+const Info = styled.input`
   margin: 5px 15px 5px 15px;
+`;
+const Button = styled.button`
+  padding: 5px 15px 5px 15px;
+  position: absolute;
+  top: 30%;
+  left: 50%;
 `;

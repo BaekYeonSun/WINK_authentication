@@ -31,16 +31,63 @@ export async function createUser(username, email, password, last_name, first_nam
     return await response.json();
 }
 
-// export function readUser(){
-//     // let state = {username:'', email:'', last_name:'', first_name:''};
-//     let state;
-//     fetch(serverUri + '/user/', {
-//         method: 'get',
-//     })
-//     .then(response => response.json())
-//     .then(data =>
-//         console.log(data.username, data.email, data.last_name, data.first_name),
-//         // state = (data.username, data.email, data.last_name, data.first_name)
-//     );
-//     return state;
-// }
+async function readUsers(){
+    const response = await fetch(serverUri + '/user/', {
+        method: 'get',
+    }).then(response => response.json());
+    for(let i = 0; i<response.length; i++){
+        if(localStorage.getItem('username') === response[i].username){
+            // URL = 'http://ec2-52-78-131-251.ap-northeast-2.compute.amazonaws.com/user/' + (i+1);
+            // console.log(URL);
+            // return URL;
+            return i+1;
+        }
+    }
+}
+
+export async function readUserInfo(){
+    let id = await readUsers();
+    let state = false;
+    let userInfo = {};
+    while(!state){
+        const response = await fetch(serverUri+'/user/'+id, {
+            method: 'get',
+        }).then(response => response.json());
+        // console.log(response);
+        if(localStorage.getItem('username') !== response.username){
+            id++;
+        }
+        else{
+            state = true;
+            userInfo = response;
+            localStorage.setItem('id', id);
+        }
+    }
+    return {
+        username: userInfo.username,
+        email: userInfo.email,
+        last_name: userInfo.last_name,
+        first_name: userInfo.first_name
+    };
+}
+
+export async function updateUser(username, password, email, last_name, first_name){
+    let id = localStorage.getItem('id');
+    let token = localStorage.getItem('token');
+    await fetch(serverUri+'/user/'+id, {
+        method: 'put',
+        mode: 'cors',
+        headers: {
+            'x-auth-token' : token,
+            'Content-Type' : 'application/x-www-form-urlencoded',
+        },
+        body: JSON.stringify({
+            username: username,
+            password: password,
+            email: email,
+            last_name: last_name,
+            first_name: first_name
+        }),
+    })
+    .catch(err => console.log("PUT error: ", err));
+}
