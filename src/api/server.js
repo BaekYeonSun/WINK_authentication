@@ -94,9 +94,8 @@ export async function updateUser(username, password, email, last_name, first_nam
 
 export async function deleteUser(){
     let id = localStorage.getItem('id');
-    const response = await fetch(serverUri+'/user/'+id, {
+    await fetch(serverUri+'/user/'+id, {
         method: 'delete'
     })
     .catch(err => console.log("DELETE error: ", err));
-    return response;
 }
